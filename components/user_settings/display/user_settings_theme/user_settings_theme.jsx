@@ -10,7 +10,7 @@ import {FormattedMessage} from 'react-intl';
 import {ActionTypes, Constants} from 'utils/constants';
 import * as Utils from 'utils/utils.jsx';
 import AppDispatcher from 'dispatcher/app_dispatcher.jsx';
-import SettingItemMax from 'components/setting_item_max.jsx';
+import SettingItemMax from 'components/setting_item_max';
 import SettingItemMin from 'components/setting_item_min';
 
 import CustomThemeChooser from './custom_theme_chooser.jsx';

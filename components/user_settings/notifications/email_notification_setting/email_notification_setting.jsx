@@ -9,7 +9,7 @@ import {getEmailInterval} from 'mattermost-redux/utils/notify_props';
 
 import {Preferences} from 'utils/constants';
 import {localizeMessage} from 'utils/utils.jsx';
-import SettingItemMax from 'components/setting_item_max.jsx';
+import SettingItemMax from 'components/setting_item_max';
 import SettingItemMin from 'components/setting_item_min';
 
 const SECONDS_PER_MINUTE = 60;

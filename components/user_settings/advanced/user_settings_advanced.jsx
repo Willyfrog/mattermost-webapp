@@ -9,7 +9,7 @@ import {emitUserLoggedOutEvent} from 'actions/global_actions.jsx';
 import Constants from 'utils/constants';
 import * as Utils from 'utils/utils.jsx';
 import {t} from 'utils/i18n';
-import SettingItemMax from 'components/setting_item_max.jsx';
+import SettingItemMax from 'components/setting_item_max';
 import SettingItemMin from 'components/setting_item_min';
 import ConfirmModal from 'components/confirm_modal';
 import BackIcon from 'components/widgets/icons/fa_back_icon';
