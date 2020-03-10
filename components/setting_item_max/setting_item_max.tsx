@@ -1,7 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import PropTypes from 'prop-types';
 import React from 'react';
 import {FormattedMessage} from 'react-intl';
 
@@ -9,118 +8,117 @@ import SaveButton from 'components/save_button';
 import Constants from 'utils/constants';
 import {isKeyPressed} from 'utils/utils.jsx';
 
-export default class SettingItemMax extends React.PureComponent {
+interface Props {
+
+    /**
+     * Array of inputs selection
+     */
+    inputs?: Array<JSX.Element>;
+
+    /**
+     * Styles for main component
+     */
+    containerStyle: string;
+
+    /**
+     * Client error
+     */
+    clientError: string | Error | null;
+
+    /**
+     * Server error
+     */
+    serverError: string|null;
+
+    /**
+     * Settings extra information
+     */
+    extraInfo?: JSX.Element;
+
+    /**
+     * Info position
+     */
+    infoPosition: string;
+
+    /**
+     * Settings or tab section
+     */
+    section: string;
+
+    /**
+     * Function to update section
+     */
+    updateSection: (section: string) => void;
+
+    /**
+     * setting to submit
+     */
+    setting: string;
+
+    /**
+     * Function to submit setting
+     */
+    submit?: (value?: string) => void;
+
+    /**
+     * Disable submit by enter key
+     */
+    disableEnterSubmit: boolean;
+
+    /**
+     * Extra information on submit
+     */
+    submitExtra?: JSX.Element;
+
+    /**
+     * Indicates whether setting is on saving
+     */
+    saving: boolean;
+
+    /**
+     * Settings title
+     */
+    title?: string|JSX.Element;
+
+    /**
+     * Settings width
+     */
+    width: string;
+
+    /**
+     * Text of cancel button
+     */
+    cancelButtonText?: JSX.Element;
+
+    /**
+     * Avoid submitting when using SHIFT + ENTER
+     */
+    shiftEnter: boolean;
+
+    /**
+     * Text of save button
+     */
+    saveButtonText: string;
+}
+
+export default class SettingItemMax extends React.PureComponent<Props> {
     static defaultProps = {
+        saveButtonText: '',
+        disableEnterSubmit: false,
+        setting: '',
+        width: '',
+        shiftEnter: false,
         infoPosition: 'bottom',
         saving: false,
         section: '',
         containerStyle: '',
     };
 
-    static propTypes = {
-
-        /**
-         * Array of inputs selection
-         */
-        inputs: PropTypes.node,
-
-        /**
-         * Styles for main component
-         */
-        containerStyle: PropTypes.string,
-
-        /**
-         * Client error
-         */
-        clientError: PropTypes.oneOfType([
-            PropTypes.string,
-            PropTypes.object,
-        ]),
-
-        /**
-         * Server error
-         */
-        serverError: PropTypes.string,
-
-        /**
-         * Settings extra information
-         */
-        extraInfo: PropTypes.element,
-
-        /**
-         * Info position
-         */
-        infoPosition: PropTypes.string,
-
-        /**
-         * Settings or tab section
-         */
-        section: PropTypes.string,
-
-        /**
-         * Function to update section
-         */
-        updateSection: PropTypes.func,
-
-        /**
-         * setting to submit
-         */
-        setting: PropTypes.string,
-
-        /**
-         * Function to submit setting
-         */
-        submit: PropTypes.func,
-
-        /**
-         * Disable submit by enter key
-         */
-        disableEnterSubmit: PropTypes.bool,
-
-        /**
-         * Extra information on submit
-         */
-        submitExtra: PropTypes.node,
-
-        /**
-         * Indicates whether setting is on saving
-         */
-        saving: PropTypes.bool,
-
-        /**
-         * Settings title
-         */
-        title: PropTypes.node,
-
-        /**
-         * Settings width
-         */
-        width: PropTypes.string,
-
-        /**
-         * Text of cancel button
-         */
-        cancelButtonText: PropTypes.node,
-
-        /**
-         * Avoid submitting when using SHIFT + ENTER
-         */
-        shiftEnter: PropTypes.bool,
-
-        /**
-         * Text of save button
-         */
-        saveButtonText: PropTypes.string,
-    }
-
-    constructor(props) {
-        super(props);
-        this.settingList = React.createRef();
-    }
+    public settingList = React.createRef<HTMLDivElement>();
 
     componentDidMount() {
         if (this.settingList.current) {
-            const focusableElements = this.settingList.current.querySelectorAll('.btn:not(.save-button):not(.btn-cancel), input.form-control, select, textarea, [tabindex]:not([tabindex="-1"])');
+            const focusableElements = this.settingList.current.querySelectorAll('.btn:not(.save-button):not(.btn-cancel), input.form-control, select, textarea, [tabindex]:not([tabindex="-1"])') as NodeListOf<HTMLElement>;
             if (focusableElements.length > 0) {
                 focusableElements[0].focus();
             } else {
@@ -135,26 +133,32 @@ export default class SettingItemMax extends React.PureComponent {
         document.removeEventListener('keydown', this.onKeyDown);
     }
 
-    onKeyDown = (e) => {
-        if (this.props.shiftEnter && e.keyCode === Constants.KeyCodes.ENTER && e.shiftKey) {
+    onKeyDown = (e: KeyboardEvent) => {
+        if (this.props.shiftEnter && e.keyCode === Constants.KeyCodes.ENTER[1] && e.shiftKey) {
             return;
         }
-        if (this.props.disableEnterSubmit !== true && isKeyPressed(e, Constants.KeyCodes.ENTER) && this.props.submit && e.target.tagName !== 'SELECT' && e.target.parentElement && e.target.parentElement.className !== 'react-select__input' && !e.target.classList.contains('btn-cancel') && this.settingList.current && this.settingList.current.contains(e.target)) {
-            this.handleSubmit(e);
+        const element = e.target as HTMLElement;
+        if (this.props.disableEnterSubmit !== true && isKeyPressed(e, Constants.KeyCodes.ENTER) && this.props.submit && element && element.tagName !== 'SELECT' && element.parentElement && element.parentElement.className !== 'react-select__input' && !element.classList.contains('btn-cancel') && this.settingList.current && this.settingList.current.contains(element)) {
+            this.handleSubmit();
         }
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = () => {
+        if (this.props.submit) {
+            if (this.props.setting) {
+                this.props.submit(this.props.setting);
+            } else {
+                this.props.submit();
+            }
+        }
+    }
+
+    handleMouseSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
-
-        if (this.props.setting) {
-            this.props.submit(this.props.setting);
-        } else {
-            this.props.submit();
-        }
+        this.handleSubmit();
     }
 
-    handleUpdateSection = (e) => {
+    handleUpdateSection = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         this.props.updateSection(this.props.section);
         e.preventDefault();
     }
@@ -205,14 +209,14 @@ export default class SettingItemMax extends React.PureComponent {
             );
         }
 
-        let submit = '';
+        let submit = null;
         if (this.props.submit) {
             submit = (
                 <SaveButton
                     defaultMessage={this.props.saveButtonText}
                     saving={this.props.saving}
                     disabled={this.props.saving}
-                    onClick={this.handleSubmit}
+                    onClick={this.handleMouseSubmit}
                 />
             );
         }
@@ -274,7 +278,7 @@ export default class SettingItemMax extends React.PureComponent {
                 {title}
                 <div className={widthClass}>
                     <div
-                        tabIndex='-1'
+                        tabIndex={-1}
                         ref={this.settingList}
                         className='setting-list'
                     >

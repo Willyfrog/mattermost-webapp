@@ -6,18 +6,9 @@ import {bindActionCreators, Dispatch} from 'redux';
 
 import {GenericAction} from 'mattermost-redux/types/actions';
 
-import {getPreviousActiveSection} from 'selectors/views/settings';
 import {updateActiveSection} from 'actions/views/settings';
 
-import {GlobalState} from 'types/store';
-
-import SettingItemMax from './setting_item_max.jsx';
-
-function mapStateToProps(state: GlobalState) {
-    return {
-        previousActiveSection: getPreviousActiveSection(state),
-    };
-}
+import SettingItemMax from './setting_item_max';
 
 function mapDispatchToProps(dispatch: Dispatch<GenericAction>) {
     return {
@@ -27,4 +18,4 @@ function mapDispatchToProps(dispatch: Dispatch<GenericAction>) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SettingItemMax);
+export default connect(null, mapDispatchToProps)(SettingItemMax);

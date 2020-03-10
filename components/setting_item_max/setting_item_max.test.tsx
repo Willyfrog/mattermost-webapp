@@ -5,12 +5,13 @@ import React from 'react';
 import {shallow} from 'enzyme';
 
 import Constants from 'utils/constants';
-import SettingItemMax from 'components/setting_item_max';
+
+import SettingItemMax from './setting_item_max';
 
 describe('components/SettingItemMax', () => {
     const baseProps = {
-        inputs: ['input_1'],
         clientError: '',
+        containerStyle: '',
         serverError: '',
         infoPosition: 'bottom',
         section: 'section',
@@ -20,6 +21,9 @@ describe('components/SettingItemMax', () => {
         saving: false,
         title: 'title',
         width: 'full',
+        disableEnterSubmit: false,
+        shiftEnter: false,
+        saveButtonText: 'save',
     };
 
     test('should match snapshot', () => {
@@ -31,7 +35,7 @@ describe('components/SettingItemMax', () => {
     });
 
     test('should match snapshot, without submit', () => {
-        const props = {...baseProps, submit: null};
+        const props = {...baseProps, submit: undefined};
         const wrapper = shallow(
             <SettingItemMax {...props}/>
         );
@@ -60,11 +64,10 @@ describe('components/SettingItemMax', () => {
     test('should have called updateSection on handleUpdateSection with section', () => {
         const updateSection = jest.fn();
         const props = {...baseProps, updateSection};
-        const wrapper = shallow(
+        const wrapper = shallow<SettingItemMax>(
             <SettingItemMax {...props}/>
         );
-
-        wrapper.instance().handleUpdateSection({preventDefault: jest.fn()});
+        wrapper.instance().handleUpdateSection({preventDefault: jest.fn()} as any);
         expect(updateSection).toHaveBeenCalled();
         expect(updateSection).toHaveBeenCalledWith('section');
     });
@@ -72,11 +75,11 @@ describe('components/SettingItemMax', () => {
     test('should have called updateSection on handleUpdateSection with empty string', () => {
         const updateSection = jest.fn();
         const props = {...baseProps, updateSection, section: ''};
-        const wrapper = shallow(
+        const wrapper = shallow<SettingItemMax>(
             <SettingItemMax {...props}/>
         );
 
-        wrapper.instance().handleUpdateSection({preventDefault: jest.fn()});
+        wrapper.instance().handleUpdateSection({preventDefault: jest.fn()} as any);
         expect(updateSection).toHaveBeenCalled();
         expect(updateSection).toHaveBeenCalledWith('');
     });
@@ -84,11 +87,11 @@ describe('components/SettingItemMax', () => {
     test('should have called submit on handleSubmit with setting', () => {
         const submit = jest.fn();
         const props = {...baseProps, submit};
-        const wrapper = shallow(
+        const wrapper = shallow<SettingItemMax>(
             <SettingItemMax {...props}/>
         );
 
-        wrapper.instance().handleSubmit({preventDefault: jest.fn()});
+        wrapper.instance().handleMouseSubmit({preventDefault: jest.fn()} as any);
         expect(submit).toHaveBeenCalled();
         expect(submit).toHaveBeenCalledWith('setting');
     });
@@ -96,11 +99,11 @@ describe('components/SettingItemMax', () => {
     test('should have called submit on handleSubmit with empty string', () => {
         const submit = jest.fn();
         const props = {...baseProps, submit, setting: ''};
-        const wrapper = shallow(
+        const wrapper = shallow<SettingItemMax>(
             <SettingItemMax {...props}/>
         );
 
-        wrapper.instance().handleSubmit({preventDefault: jest.fn()});
+        wrapper.instance().handleMouseSubmit({preventDefault: jest.fn()} as any);
         expect(submit).toHaveBeenCalled();
         expect(submit).toHaveBeenCalledWith();
     });
@@ -108,16 +111,16 @@ describe('components/SettingItemMax', () => {
     it('should have called submit on handleSubmit onKeyDown ENTER', () => {
         const submit = jest.fn();
         const props = {...baseProps, submit};
-        const wrapper = shallow(
+        const wrapper = shallow<SettingItemMax>(
             <SettingItemMax {...props}/>
         );
         const instance = wrapper.instance();
 
-        instance.onKeyDown({preventDefault: jest.fn(), key: Constants.KeyCodes.ENTER[0], target: {tagName: 'SELECT', classList: {contains: jest.fn()}, parentElement: {className: 'react-select__input'}}});
+        instance.onKeyDown({preventDefault: jest.fn(), key: Constants.KeyCodes.ENTER[0], target: {tagName: 'SELECT', classList: {contains: jest.fn()}, parentElement: {className: 'react-select__input'}}} as any);
         expect(submit).toHaveBeenCalledTimes(0);
 
         instance.settingList.current = {contains: jest.fn(() => true)};
-        instance.onKeyDown({preventDefault: jest.fn(), key: Constants.KeyCodes.ENTER[0], target: {tagName: '', classList: {contains: jest.fn()}, parentElement: {className: ''}}});
+        instance.onKeyDown({preventDefault: jest.fn(), key: Constants.KeyCodes.ENTER[1], target: {classList: {contains: jest.fn()}, parentElement: {className: ''}} as any});
         expect(submit).toHaveBeenCalledTimes(1);
         expect(submit).toHaveBeenCalledWith('setting');
     });
