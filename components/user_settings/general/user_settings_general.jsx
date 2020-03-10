@@ -85,7 +85,9 @@ const holders = defineMessages({
     },
 });
 
-class UserSettingsGeneralTab extends React.Component {
+const RESEND_DELAY = 500;
+
+class UserSettingsGeneralTab extends React.PureComponent {
     static propTypes = {
         intl: intlShape.isRequired,
         user: PropTypes.object.isRequired,
@@ -147,7 +149,7 @@ class UserSettingsGeneralTab extends React.Component {
                                 this.setState({
                                     showSpinner: false,
                                 });
-                            }, 500);
+                            }, RESEND_DELAY);
                         }}
                     >
                         <FormattedMessage
