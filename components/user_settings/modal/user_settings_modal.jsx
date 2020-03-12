@@ -60,7 +60,7 @@ const holders = defineMessages({
     },
 });
 
-class UserSettingsModal extends React.Component {
+class UserSettingsModal extends React.PureComponent {
     static propTypes = {
         currentUser: PropTypes.object.isRequired,
         onHide: PropTypes.func.isRequired,
@@ -76,6 +76,7 @@ class UserSettingsModal extends React.Component {
         this.state = {
             active_tab: 'general',
             active_section: '',
+            firstLoad: 'true',
             showConfirmModal: false,
             enforceFocus: true,
             show: true,
@@ -139,6 +140,7 @@ class UserSettingsModal extends React.Component {
     handleHidden = () => {
         this.setState({
             active_tab: 'general',
+            firstLoad: true,
             active_section: '',
         });
         this.props.onHide();
@@ -218,6 +220,7 @@ class UserSettingsModal extends React.Component {
         } else {
             this.setState({
                 active_tab: tab,
+                firstLoad: false,
                 active_section: '',
             });
         }
@@ -288,6 +291,7 @@ class UserSettingsModal extends React.Component {
                                 <UserSettings
                                     activeTab={this.state.active_tab}
                                     activeSection={this.state.active_section}
+                                    firstLoad={this.state.firstLoad}
                                     updateSection={this.updateSection}
                                     updateTab={this.updateTab}
                                     closeModal={this.closeModal}

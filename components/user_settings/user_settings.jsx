@@ -32,6 +32,7 @@ export default class UserSettings extends React.PureComponent {
                         user={this.props.user}
                         activeSection={this.props.activeSection}
                         updateSection={this.props.updateSection}
+                        firstLoad={this.props.firstLoad}
                         updateTab={this.props.updateTab}
                         closeModal={this.props.closeModal}
                         collapseModal={this.props.collapseModal}

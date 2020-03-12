@@ -39,6 +39,10 @@ interface Props {
      */
     previousActiveSection?: string;
 
+    currentActiveSection?: string;
+
+    previousSection?: string;
+
     /**
      * Actions
      * Update the active section for focusing
@@ -49,8 +53,9 @@ interface Props {
 export default class SettingItemMin extends React.PureComponent<Props> {
     private edit: HTMLButtonElement | null = null;
 
-    componentDidMount() {
-        if (this.props.previousActiveSection === this.props.section) {
+    componentDidUpdate() {
+        if (this.props.previousActiveSection === this.props.previousSection && !this.props.currentActiveSection) {
+            console.log(`sections ${this.props.section} gets focus from ${this.props.previousActiveSection}`);
             if (this.edit) {
                 this.edit.focus();
             }

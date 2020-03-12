@@ -98,12 +98,16 @@ interface Props {
     /**
      * Text of save button
      */
-    saveButtonText: string;
+    saveButtonText?: string;
+
+    /**
+     * Update active section for focusing
+     */
+    actions: {updateActiveSection: (newActiveSection: string) => {type: string; data: string}};
 }
 
 export default class SettingItemMax extends React.PureComponent<Props> {
     static defaultProps = {
-        saveButtonText: '',
         disableEnterSubmit: false,
         setting: '',
         width: '',
@@ -118,7 +122,7 @@ export default class SettingItemMax extends React.PureComponent<Props> {
 
     componentDidMount() {
         if (this.settingList.current) {
-            const focusableElements = this.settingList.current.querySelectorAll('.btn:not(.save-button):not(.btn-cancel), input.form-control, select, textarea, [tabindex]:not([tabindex="-1"])') as NodeListOf<HTMLElement>;
+            const focusableElements = this.settingList.current.querySelectorAll('.btn:not(.save-button):not(.btn-cancel), input.form-control, input[type=radio]:checked, input[type=checkbox], select, textarea, [tabindex]:not([tabindex="-1"])') as NodeListOf<HTMLElement>;
             if (focusableElements.length > 0) {
                 focusableElements[0].focus();
             } else {
@@ -144,6 +148,7 @@ export default class SettingItemMax extends React.PureComponent<Props> {
     }
 
     handleSubmit = () => {
+        console.log('on submit');
         if (this.props.submit) {
             if (this.props.setting) {
                 this.props.submit(this.props.setting);
@@ -151,6 +156,8 @@ export default class SettingItemMax extends React.PureComponent<Props> {
                 this.props.submit();
             }
         }
+        console.log('updating active section');
+        this.props.actions.updateActiveSection('');
     }
 
     handleMouseSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -161,6 +168,7 @@ export default class SettingItemMax extends React.PureComponent<Props> {
     handleUpdateSection = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         this.props.updateSection(this.props.section);
         e.preventDefault();
+        this.props.actions.updateActiveSection('');
     }
 
     render() {

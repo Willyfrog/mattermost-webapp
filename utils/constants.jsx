@@ -190,6 +190,8 @@ export const ActionTypes = keyMirror({
     FILTER_MARKETPLACE_PLUGINS: null,
 
     POST_UNREAD_SUCCESS: null,
+
+    SETUP_PREVIOUS_ACTIVE_SECTION: null,
 });
 
 export const PostRequestTypes = keyMirror({

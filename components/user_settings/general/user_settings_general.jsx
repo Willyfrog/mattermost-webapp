@@ -94,6 +94,7 @@ class UserSettingsGeneralTab extends React.PureComponent {
         updateSection: PropTypes.func.isRequired,
         updateTab: PropTypes.func.isRequired,
         activeSection: PropTypes.string.isRequired,
+        firstLoad: PropTypes.bool,
         closeModal: PropTypes.func.isRequired,
         collapseModal: PropTypes.func.isRequired,
         actions: PropTypes.shape({
@@ -104,6 +105,7 @@ class UserSettingsGeneralTab extends React.PureComponent {
             sendVerificationEmail: PropTypes.func.isRequired,
             setDefaultProfileImage: PropTypes.func.isRequired,
             uploadProfileImage: PropTypes.func.isRequired,
+            setupPreviousActiveSection: PropTypes.func.isRequired,
         }).isRequired,
         requireEmailVerification: PropTypes.bool,
         maxFileSize: PropTypes.number,
@@ -133,6 +135,13 @@ class UserSettingsGeneralTab extends React.PureComponent {
                 this.setState({resendStatus: 'failure'});
             }
         });
+    }
+
+    componentDidMount() {
+    // don't focus if there wasn't any user interaction and we were just showing the tab as it is the default
+        if (!this.props.firstLoad) {
+            this.props.actions.setupPreviousActiveSection('picture');
+        }
     }
 
     createEmailResendLink = (email) => {
@@ -717,6 +726,7 @@ class UserSettingsGeneralTab extends React.PureComponent {
                     describe={describe}
                     section={'email'}
                     updateSection={this.updateSection}
+                    previousSection={'position'}
                 />
             );
         }
@@ -886,6 +896,7 @@ class UserSettingsGeneralTab extends React.PureComponent {
                     title={formatMessage(holders.fullName)}
                     describe={describe}
                     section={'name'}
+                    previousSection={'picture'}
                     updateSection={this.updateSection}
                 />
             );
@@ -987,6 +998,7 @@ class UserSettingsGeneralTab extends React.PureComponent {
                     title={formatMessage(holders.nickname)}
                     describe={describe}
                     section={'nickname'}
+                    previousSection={'username'}
                     updateSection={this.updateSection}
                 />
             );
@@ -1069,6 +1081,7 @@ class UserSettingsGeneralTab extends React.PureComponent {
                     title={formatMessage(holders.username)}
                     describe={this.props.user.username}
                     section={'username'}
+                    previousSection={'name'}
                     updateSection={this.updateSection}
                 />
             );
@@ -1171,6 +1184,7 @@ class UserSettingsGeneralTab extends React.PureComponent {
                     title={formatMessage(holders.position)}
                     describe={describe}
                     section={'position'}
+                    previousSection={'nickname'}
                     updateSection={this.updateSection}
                 />
             );
@@ -1228,6 +1242,7 @@ class UserSettingsGeneralTab extends React.PureComponent {
                     title={formatMessage(holders.profilePicture)}
                     describe={minMessage}
                     section={'picture'}
+                    previousSection={'email'}
                     updateSection={this.updateSection}
                 />
             );
