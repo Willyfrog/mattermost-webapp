@@ -496,8 +496,16 @@ export default class SuggestionBox extends React.PureComponent {
             selectionIndex = this.state.terms.length - 1;
         }
 
+        let nextSelected = this.state.terms[selectionIndex];
+
+        // if there are duplicate entries, we'll skip through them.
+        while (nextSelected === this.state.selection && selectionIndex > 0 && selectionIndex < this.state.terms.length - 1) {
+            selectionIndex += delta;
+            nextSelected = this.state.terms[selectionIndex];
+        }
+
         this.setState({
-            selection: this.state.terms[selectionIndex],
+            selection: nextSelected,
         });
     }
 
