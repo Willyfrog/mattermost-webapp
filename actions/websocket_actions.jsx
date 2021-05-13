@@ -112,7 +112,9 @@ export function initialize() {
     if (config.WebsocketURL) {
         connUrl = config.WebsocketURL;
     } else {
-        connUrl = new URL(getSiteURL());
+        // terribly insecure, this should never go to master
+        const serverURL = window.desktop && window.desktop.url ? window.desktop.url : getSiteURL();
+        connUrl = new URL(serverURL);
 
         // replace the protocol with a websocket one
         if (connUrl.protocol === 'https:') {
